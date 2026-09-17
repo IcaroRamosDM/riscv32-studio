@@ -1,0 +1,80 @@
+﻿RISC-V Studio License
+
+Copyright © 2026 Ícaro Ramos Rodrigues dos Santos.
+
+This license applies to RISC-V Studio distributed in executable form and to the
+accompanying materials created by its author. This distribution does not publish
+the source code of the RISC-V Studio executable. The supplied examples and
+scripts accompany the program for the purposes permitted by this license.
+
+1. Free personal and educational use
+
+You may download, install, run and keep backup copies of RISC-V Studio, free of
+charge, for:
+
+- Personal use: study, experimentation and an individual's private projects,
+  without a professional or commercial purpose.
+- Educational use: teaching, learning, educational demonstrations, laboratory
+  activities and academic research by students, teachers and public or private
+  educational institutions, including institutions that charge tuition or fees
+  for the courses in which these activities take place.
+
+Educational institutions may install the program in their laboratories and
+provide unmodified copies to students and teachers for these purposes, retaining
+this license and the third-party notices.
+
+An educational institution's private or for-profit status does not exclude it
+from the educational permission. The purpose of the use is what matters. This
+permission does not automatically extend to commercial services the institution
+provides to third parties or to production activities without an educational
+purpose.
+
+2. Commercial use requires authorization
+
+Professional or commercial use outside the educational permission above requires
+a request to the author and the author's prior, express written authorization.
+
+This includes, for example, use in production, business quality control,
+commercial product development, consulting, paid services or incorporating the
+program into a commercial offering. A free download does not imply permission
+for commercial use.
+
+To request authorization, contact Ícaro Ramos Rodrigues dos Santos through
+LinkedIn (https://www.linkedin.com/in/icaro-ramos-r/). His GitHub profile is
+IcaroRamosDM (https://github.com/IcaroRamosDM). Describe the intended purpose and
+wait for authorization before starting commercial use.
+
+3. Distribution and reserved rights
+
+Sharing a link to the official download page is permitted and encouraged.
+Beyond the personal, backup and educational copies permitted above, this license
+does not grant the right to resell, sublicense or redistribute RISC-V Studio on
+other websites or in other products or packages. Other forms of distribution
+require the author's authorization.
+
+Do not remove the author identification, this license or the dependency notices.
+Rights not expressly granted remain reserved, subject to permissions required
+by applicable law.
+
+4. Third-party components
+
+The program uses components with their own licenses, listed in
+THIRD_PARTY_NOTICES.md and the licenses/ directory. The restrictions in this
+license do not alter or limit the rights granted by those components' licenses.
+Each component remains subject to its respective terms.
+
+5. Responsibility for use
+
+The program is provided as is, without a warranty of fitness for a particular
+purpose, to the extent permitted by applicable law. Users are responsible for
+checking data, units, settings and results before making decisions based on the
+analyses.
+
+A simulation result describes the behavior of the model and the program executed
+under the selected conditions. It does not establish hardware certification,
+formal code correctness or a safe operating condition. RISC-V Studio does not
+replace hardware testing, independent technical validation or legal and
+regulatory requirements.
+
+This is a closed-source distribution with specific permissions for free use;
+it is not offered under an open-source license.

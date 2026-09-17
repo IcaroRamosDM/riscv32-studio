@@ -1,0 +1,11 @@
+digraph workflow {
+graph [bgcolor="#101722", pad="0.2", ranksep="0.35"]; node [shape=box, style="rounded,filled", fillcolor="#192b3c", color="#40d5be", fontcolor="#edf5fc", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.10"]; edge [color="#8fbbde", fontcolor="#c9dceb", fontname="DejaVu Sans", fontsize=10];
+a [label="Build: capture editor and settings"]; b [label="C or Assembly?", shape=diamond];
+c [label="Compile C with startup/runtime"]; d [label="Assemble user _start"];
+e [label="Tools succeeded?", shape=diamond]; f [label="Show diagnostic\nKeep loaded machine", color="#ec8b7b"];
+g [label="Keep completed build"]; h [label="Load build: validate candidate"];
+i [label="Candidate valid?", shape=diamond]; j [label="Install new session, paused"];
+a -> b; b -> c [label="C"]; b -> d [label="Assembly"]; c -> e; d -> e;
+e -> f [label="No"]; e -> g [label="Yes"]; g -> h -> i; i -> f [label="No"]; i -> j [label="Yes"];
+
+}

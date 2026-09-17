@@ -1,0 +1,7 @@
+digraph workflow {
+graph [bgcolor="#101722", pad="0.2", ranksep="0.35"]; node [shape=box, style="rounded,filled", fillcolor="#192b3c", color="#40d5be", fontcolor="#edf5fc", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.10"]; edge [color="#8fbbde", fontcolor="#c9dceb", fontname="DejaVu Sans", fontsize=10];
+a [label="Compare loop condition"]; b [label="Continue?", shape=diamond];
+c [label="Execute loop body"]; d [label="Update counter"]; e [label="Continue after the loop"];
+a -> b; b -> c [label="Yes"]; c -> d -> a; b -> e [label="No"];
+
+}

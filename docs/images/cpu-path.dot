@@ -1,0 +1,9 @@
+digraph workflow {
+graph [bgcolor="#101722", pad="0.2", ranksep="0.35"]; node [shape=box, style="rounded,filled", fillcolor="#192b3c", color="#40d5be", fontcolor="#edf5fc", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.10"]; edge [color="#8fbbde", fontcolor="#c9dceb", fontname="DejaVu Sans", fontsize=10];
+a [label="PC: address of next instruction"]; b [label="Read four instruction bytes from RAM"];
+c [label="Decode fields and operation"]; d [label="Read source registers"];
+e [label="Calculate result / address / next PC"]; f [label="Check and perform optional RAM access"];
+g [label="Commit register effects and next PC"];
+a -> b -> c -> d -> e -> f -> g; g -> a [label="Next step"];
+
+}
