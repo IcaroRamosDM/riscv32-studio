@@ -1,0 +1,42 @@
+{
+  "repository": "IcaroRamosDM/riscv32-studio",
+  "excluded_application_directories": [
+    "src",
+    "gui",
+    "studio",
+    "core",
+    "include",
+    "data",
+    "backups"
+  ],
+  "releases": [
+    {
+      "tag": "v1.9.0-rc1",
+      "prerelease": true,
+      "assets": [
+        "SHA256SUMS.txt",
+        "LEIA-ME.txt",
+        "SOURCE_AVAILABILITY.md",
+        "LICENSE.txt",
+        "NOTAS_DA_VERSAO.md",
+        "RISC-V-Studio-1.9.0-rc1-Linux-amd64.deb",
+        "RISC-V-Studio-1.9.0-rc1-Linux-x86_64-portable.tar.gz",
+        "RISC-V-Studio-1.9.0-rc1-Third-Party-Sources.tar.gz"
+      ]
+    },
+    {
+      "tag": "v1.0.0",
+      "prerelease": false,
+      "assets": [
+        "SHA256SUMS.txt",
+        "LICENSE.txt",
+        "riscv32-studio_1.0.0_amd64.deb",
+        "riscv32-studio-1.0.0-linux-x86_64.tar.gz",
+        "RISC-V-Studio-1.0.0-Windows-Setup.exe",
+        "RISC-V-Studio-1.0.0-Windows-Portable.exe",
+        "RISC-V-Studio-1.0.0-Windows-Portable.zip",
+        "RISC-V-Studio-1.0.0-Third-Party-Sources.zip"
+      ]
+    }
+  ]
+}
