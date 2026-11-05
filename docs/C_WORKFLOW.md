@@ -96,3 +96,6 @@ File > Load ELF / binary / words.
 Use --help on the helper for its exact options. Guest programs use the supplied
 freestanding runtime; this is not a hosted desktop C environment with filesystem,
 terminal I/O or operating-system services.
+
+The independent terminal edition is available at
+[riscv32-simulator](https://github.com/IcaroRamosDM/riscv32-simulator).

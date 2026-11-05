@@ -1,5 +1,11 @@
 # Files, Export and Projects
 
+ELF imports accept at most 4096 sections and section names up to 4095 bytes.
+The total expanded section data is limited to 64 MiB. The portable DWARF backend
+validates complete zlib streams before parsing them, including GNU compression
+and zero-size declarations; truncated streams, wrong checksums and mismatched
+expanded sizes are rejected.
+
 ## Choose the right format
 
 | Format | What it preserves | How to open it |
@@ -8,17 +14,25 @@
 | Assembly source (.asm, .s, .S) | Instructions/directives and labels written in the source. | Open source, then Build and Load build. Uppercase .S runs the C preprocessor. |
 | ELF (.elf) | Initial image, segment addresses, entry, and any symbols/DWARF included by its producer. | File > Load ELF / binary / words. |
 | Raw binary (.bin) | Initial bytes only. | Load program; explicitly enter load address and entry. |
+| Intel HEX / Motorola S-record | Addressed initial bytes and optional start address, with record checksums. | Load executable; choose the ISA before import. |
 | Assembly image (.asm export) | Exact initial bytes, entry, load address and minimum RAM metadata. | Open source, then Build and Load build. |
 | Disassembly listing (.lst) | Addresses, instruction encodings and readable disassembly for inspection. | Open in a text viewer; it is not assembler input. |
 | Project (.rv32project) | Editor, loaded program, available sources, machine/debug state, settings and main workspace. | File > Open project (Ctrl+Alt+O). |
+| Comparison (.rv32comparison) | Both machines, frozen text inputs, selected observations and paired checkpoints. | File > Open comparison. |
 
-The machine is fixed to RV32I/ILP32, 32-bit little endian. The raw-load dialog
-states this architecture explicitly. The CLI accepts --arch rv32i and rejects
-other architectures. A raw file cannot identify its own architecture or addresses.
+The machine supports RV32 and RV64 with the implemented scalar and vector
+extensions, using little-endian ILP32 or LP64; see [profiles](ARCHITECTURES.md). ELF files
+declare their required supported ISA. Raw, word and addressed firmware images use
+the selected ISA; the CLI accepts names such as `--arch rv32i` or `--arch rv32imac_zicsr`. A raw binary
+cannot identify its own architecture or addresses. Intel HEX and S-record carry
+addresses but no supported ISA/debug metadata; see the [import guide](WORKSPACE_1_2.md#addressed-firmware-imports-13).
 
 Loading Assembly, ELF or binary exposes decoded instructions in the Assembly
-panel. It does not recover the original C text, names or comments. The analyzer provides optional
-register-level C-like pseudocode, not recovery of the original C; see [Program Analysis](ANALYSIS.md).
+panel. It does not recover the original C text, names or comments. The **Reconstructed C** tab infers a readable approximation with generated names,
+constants and supported control structures. It preserves the editor and tracks
+instruction execution; see [Program Analysis](ANALYSIS.md). **Save C...** exports
+the selected inferred function. Some regions retain machine operations requiring
+manual completion; the output is not the original source or a full application.
 
 ## Import standalone Assembly
 
@@ -32,7 +46,7 @@ controls are disabled for this mode. Compare is available for C only.
 
 The default load address is 0x1000. An exported Assembly image carries its own
 load-address metadata; its recorded minimum RAM must fit the selected capacity.
-Assembly uses GNU syntax, RV32I and the ILP32 ABI. Unsupported instruction
+Assembly uses GNU syntax, the selected RV32/RV64 ISA profile and its ILP32/LP64 ABI. Unsupported instruction
 extensions are rejected.
 
 For a complete standalone example, open Examples > ram_boundary.asm.
@@ -79,9 +93,10 @@ A project stores:
 - The loaded executable separately from the editor, so edits made after the
   last build remain distinct from the code the machine was executing.
 - Available build-source snapshots, local quoted headers, runtime sources and
-  text Assembly includes, within the bounds below.
+  captured Assembly resources, including binary `.incbin` bytes, within the bounds below.
 - Initial image, current registers/RAM/PC, halt/exit state and debugger call depth.
-- Address/source breakpoints and enabled flags.
+- Address/source breakpoints with conditions, hit counts and logpoints, memory
+  watchpoints, expressions, timeline markers and cumulative execution counts.
 - Retained history, its capacity, cursor, recorded future and discarded count.
 - RAM/Stack/build/speed/value/run-limit settings and main-window size, splitters,
   tabs, source selection, editor cursor and memory navigation.
@@ -95,11 +110,21 @@ Available source files are reconstructed in private temporary storage.
 Opening never overwrites the original source paths. Save source from an opened
 project asks for an explicit destination; Save project preserves it in the
 project archive. Rebuilding needs the installed compiler and this application's
-tools/runtime. Projects do not bundle a compiler, arbitrary build systems,
-binary .incbin assets, or missing source files.
+tools/runtime. Projects do not bundle a compiler, arbitrary build systems or
+missing source files. A successful build captures assembler inputs, including
+macro-expanded `.include`/`.incbin`; available literal relative resources can
+also be captured while saving a draft. Generate external inputs before building.
 
-The independent Compare window is not serialized. Recreate its two sessions
-with Compare from the saved C editor. Help window position is retained while
+**File > Captured Assembly resources** shows captured file sizes, SHA-256 and
+the first 512 bytes, and exports the full selected file. These are the bytes
+from the loaded build or restored project, not a live view of external files.
+Projects containing binary asset blocks use format version 3; this version of
+Studio continues to read earlier version-1/version-2 projects. Older Studio
+versions reject version 3 rather than silently losing required resources.
+
+The independent Compare window has its own **Save comparison** action and
+`.rv32comparison` format, preserving both machines and frozen text/binary dependencies.
+Saving the main project does not automatically save open comparisons. Help window position is retained while
 the application is open, separately from the saved main workspace.
 
 ## Validation and bounds
@@ -109,10 +134,18 @@ checksums, machine state and restored history before replacing the current
 session. Malformed projects leave that session intact.
 
 - Project file: at most 128 MiB.
-- RAM: at most 256 MiB; ELF: at most 64 MiB.
-- Saved text sources: at most 256 files, 4 MiB per file and 16 MiB total.
+- RAM: at most 256 MiB; ELF, word listings and Intel HEX/S-record inputs: at most 64 MiB each, including comments and blank lines.
+- ELF sections, including their declared expanded gABI/GNU debug data, share a 64 MiB budget; NOBITS/BSS does not consume that metadata budget. Malformed compression headers are rejected before metadata readers allocate buffers.
+- Saved sources and resources together: at most 256 files, 4 MiB per file and 16 MiB total.
 - Editor/source input: at most 4 MiB of UTF-8 without NUL bytes.
 - History: at most 100000 retained events.
+- Optional project exercise: 64 KiB and 32 checks; report history: 64 records
+  within 1 MiB. Assignments and their reports are preserved with the workspace;
+  reading them never starts execution or evaluates expressions automatically.
+- Optional address annotations: 1024 nonoverlapping ranges, 1 MiB metadata,
+  64-character unique ASCII identifiers and 2048 UTF-8 bytes per note. Older
+  projects without annotations restore an empty set. An invalid set rejects the
+  project before replacing the current machine.
 
 Very large encoded Assembly exports may exceed the source-import text limit;
 use ELF/binary or a project for those images. Saving/loading large memory and

@@ -65,3 +65,21 @@ capacity is reached. History is a ring buffer, not a recording of unlimited
 length. Use a small value such as 64 to see discarding sooner; 0 disables history.
 Pause remains available during execution. At -O2 there may be fewer than 100000
 instructions; compare -O0 to exercise the full buffer.
+
+## Raw binary to reconstructed C
+
+Choose **Examples > hello_world.bin**. This sample loads directly at 0x00001000
+with 64 KiB of RAM; no Build step is needed. The **Reconstructed C** tab shows
+an inferred function with the string "Hello World!" and a byte-copy loop.
+
+1. In Memory, enter **0x00002000** and click **Go**.
+2. Press **F6** three times. The first byte becomes **48** (ASCII H).
+3. Use **Back** and **Replay** to observe the store being undone and restored.
+4. Press **F5** to complete the program. Memory contains the twelve characters
+   followed by **00**; the program exits with status 0.
+5. Use **Save C** to export the selected inferred function. This view reads the
+   initial machine instructions. Its names and types are inferred; it does not
+   recover the original author's source or invent a console-printing operation.
+
+The Assembly pane remains the instruction-by-instruction reference. Several
+instructions may map to a single reconstructed C statement.

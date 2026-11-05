@@ -1,6 +1,7 @@
 #include <stdint.h>
 uint32_t values[3] = {10, 20, 30};
 volatile uint32_t result;
+
 int main(void)
 {
     uint32_t *p = &values[1];

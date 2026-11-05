@@ -1,0 +1,9 @@
+{
+  "format": "riscv-studio-scenarios",
+  "version": 1,
+  "cases": [
+    {"name": "Letter A and alternating buttons", "input": "A", "buttons": 85},
+    {"name": "Empty input and all buttons", "input": "", "buttons": 255},
+    {"name": "Binary input", "inputHex": "ff00", "buttons": 0}
+  ]
+}

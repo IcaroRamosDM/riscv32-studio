@@ -166,8 +166,30 @@ can look like valid instructions, especially in raw binary. Limits bound the
 number of instructions, entries, references and rendered nodes. Partial analysis
 is explicitly identified.
 
-Experimental pseudocode expresses low-level register operations with labels,
-jumps and memory helpers. It is not the original C or a compilable reconstruction.
+The C reconstruction pass uses the same immutable analysis image. It computes
+constant values to a fixed point over control-flow edges; values that disagree
+at a join become unknown. Calls invalidate propagated register values. Backward
+liveness removes pure intermediate calculations whose results are no longer
+needed. Reads, including loads to x0, remain observable.
+
+Closed single-entry regions can become `if/else`, `while` or `do/while`.
+Irreducible regions and unproven targets retain explicit transfers. Consecutive
+constant byte stores can become a string and an equivalent byte-copy loop;
+grouping stops at alternate entries or other observable instructions.
+
+Each emitted statement retains instruction addresses. Removed setup instructions
+map to a surviving statement in the same straight-line block. The Qt view uses
+this map for selection, stepping, Back/Replay and breakpoints. Several machine
+steps can remain on the same reconstructed C line. Reconstruction never writes
+CPU registers, changes RAM, replaces the editable source or executes the new C.
+If instructions in the selected function change, its execution highlight is
+disabled until the initial image is restored.
+
+The output uses generated unsigned 32-bit values and RV32 little-endian memory
+casts. Types, signatures and names are estimates. Operations named `rv32_*`
+identify unresolved machine/environment behavior and need guest-aware definitions
+before compilation. A reconstructed function is not an entire hosted C program.
+The instruction-level view remains available for auditing individual effects.
 
 ## 11. Projects and safe file replacement
 

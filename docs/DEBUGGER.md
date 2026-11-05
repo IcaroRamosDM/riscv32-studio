@@ -4,6 +4,26 @@ The desktop and monitor use the same C debugger and DWARF inspector. Assembly
 instructions remain the execution unit. Source controls execute instructions
 until their stopping condition is reached; they never execute C directly.
 
+## Bit fields and optimized scalar locations
+
+Typed inspection supports signed and unsigned integer bit fields of 1–64 bits,
+including packed fields crossing byte boundaries, nested fields and arrays.
+It reads `DW_AT_data_bit_offset` and legacy storage-unit layouts, including the
+negative offsets emitted by GCC for packed fields. Every access is bounded by
+the described containing object and RAM. Bit fields have a displayed storage
+location but no addressable C object: `row.bits + 1` works; `&row.bits` is rejected.
+
+Complete scalar locations made from `DW_OP_piece` or `DW_OP_bit_piece` can combine
+registers, RAM and computed values, up to 64 bits in total. The reader verifies
+the declared type size and each register's available width. Missing pieces,
+unavailable registers, invalid ranges, oversized values and unassembled tails
+remain unavailable. Aggregates outside contiguous RAM and entry-value expressions
+are still outside this bounded support. Watch arithmetic remains XLEN-wide.
+
+The implementation follows the bit/location conventions of the
+[DWARF standard](https://dwarfstd.org/doc/DWARF5.pdf) for the supported little-endian
+RISC-V targets.
+
 ## First desktop walkthrough
 
 1. Open **Examples > learning.c**, or start with the default editor.
@@ -137,8 +157,10 @@ source text read from disk is labeled as unverified against its original build.
 
 ## Bounded history
 
-Default capacity is **8192 instruction attempts**, including exits and traps.
-The configurable range is 0 through 100000; zero disables recording.
+Default capacity is **8192 events**, including instruction attempts, exits, traps
+and reversible debugger edits. The CLI accepts 0 through 100000 in RAM; Studio
+accepts 0 through 2000000, using preallocated OS-paged disk storage above 100000.
+Zero disables recording. Each comparison version has independent storage.
 Capacity changes allocate new storage transactionally and clear prior history
 without resetting CPU/RAM. An allocation failure retains the old buffer.
 
@@ -151,9 +173,11 @@ RAM does not need to be copied on each step.
     back 4
     forward 4
 
-At the current 64-bit Linux ABI, one entry uses 464 bytes: the default reserves
-about 3.6 MiB, excluding loaded RAM and metadata. The UI and monitor report the
-actual allocation computed from sizeof(DebugEvent).
+The UI and monitor report the actual reserved size from `sizeof(DebugEvent)`,
+which depends on the host ABI and the recorded machine/device state. Disk paging
+uses the operating system's cache and does not guarantee a fixed resident-RAM
+limit. Project files restore the full retained history into fresh local storage.
+See [workspace guidance](WORKSPACE_1_2.md) for cache location and cleanup details.
 
 - When full, the ring buffer discards the oldest entry and increments Discarded.
 - Back restores the preceding recorded CPU/RAM/exit/depth state.

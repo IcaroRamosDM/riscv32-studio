@@ -1,6 +1,7 @@
 #include <stdint.h>
 uint32_t values[5] = {3, 6, 9, 12, 15};
 volatile uint32_t result;
+
 int main(void)
 {
     uint32_t total = 0;

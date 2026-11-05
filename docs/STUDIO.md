@@ -49,8 +49,12 @@ Instruction details explain the decoded fields and last step. Other tabs show
 build output, symbols, available variables and stack data, breakpoints and
 execution history. Back and Replay navigate retained history.
 
-Analysis opens control-flow, call and reference views. Experimental pseudocode
-is an explanatory approximation derived from instructions.
+Analysis opens control-flow, call, reference and reconstructed-C views.
+The main Source panel also has **Reconstructed C**, selected automatically for
+raw machine code. This read-only view simplifies constants, memory operations,
+strings and recognized conditions/loops. It follows instruction stepping and
+history; **Save C...** exports the selected function. Explicit machine operations
+and labels remain where reconstruction is incomplete.
 
 ## Help and About
 

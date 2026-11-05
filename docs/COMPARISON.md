@@ -1,7 +1,9 @@
 # Compilation Comparison
 
-The comparison workspace compiles one immutable C editor snapshot twice:
-Learning (-O0 -g) and Optimized (-O2 -g), both for RV32I/ILP32.
+The comparison workspace compiles one immutable set of source/resource inputs twice.
+The defaults are Learning (-O0 -g) and Optimized (-O2 -g); either side can use
+-O0, -O1, -O2, -O3, -Og or -Os. The selected GCC or optional Clang compiler and
+RV32I/RV32IM ISA apply to both versions, using ILP32.
 The versions use the same RAM and reserved-stack sizes. Each has independent
 CPU, RAM, source mappings, breakpoint state and execution history.
 
@@ -50,11 +52,36 @@ Compiler versions/options can change the exact numbers.
 - Each Run/Into/Over/Out observes its own limit. Pause and Pause both stop between
   instructions. Loops yield to the event loop instead of blocking the interface.
 
-The lower table compares raw bytes of up to 64 common named data symbols, with
+The lower table can compare raw bytes of up to 64 common named data symbols, with
 a preview of the first 16 bytes and full-size equality checks. It compares the
 current states when both machines are paused, and labels when both have exited.
 Pointer bytes may differ because addresses differ; equality is not implied for
 all registers or for the full RAM image.
+
+**Choose observations** adds register/global/typed-local expressions and virtual
+console, GPIO or exit observations. Unsupported or optimized-out values are
+inconclusive. **Record paired checkpoint** captures the selected values at the
+two current positions with executable/output hashes. The machines need to be
+paused at corresponding semantic points; recording a checkpoint does not align
+them automatically. The instruction-differences tab aligns up to 512 instruction
+strings per side for the selected C line, without claiming semantic equivalence.
+
+**Run both until condition** (also in the Comparison menu) seeks an intermediate
+semantic point automatically. Enter a read-only scalar global/register/memory
+condition such as `counter == 10` and a checkpoint name. Each machine pauses at
+its first matching state, starting with its current state; the two builds may
+execute different instruction counts. The expression is checked on both machines
+before either advances. Conditions use the unsigned 32-bit expression rules;
+DWARF-local values and the special `$stdout`/`$exit` observations are not condition
+inputs. Prefer a meaningful, stable program flag or counter over a scratch register.
+
+The per-version run limit and existing breakpoints/watchpoints remain active.
+**Pause both** cancels. Exit, trap, an unavailable expression or another stop
+before both conditions are reached pauses the pair and records **Inconclusive**.
+The checkpoint includes the condition, limit, per-version attempts, reached flags
+and stop details. Successful checkpoints show **Reached on both**; this establishes
+only the selected condition and observations, not complete behavioral equivalence.
+Saved reports are validated and displayed when reopened, never executed on load.
 
 ## What optimization means here
 
@@ -86,15 +113,24 @@ The comparison does not replace the main workspace's loaded machine.
 **Rebuild snapshot** rebuilds the text already displayed in this comparison.
 To compare changed text, return to the main editor and click Compare again.
 
-The same C file is used for both compiler invocations. Quoted headers are read
-from the saved source's directory; those external files are not frozen into a
-complete project snapshot. Project persistence saves the main workspace separately.
+The main C draft, additional compilation units, runtime inputs, transitive
+text/header dependencies and Assembly resources for both optimization profiles
+are frozen before either final build. Discovery compiles probes with GNU assembler
+dependency tracking, including macro-expanded `.include` and `.incbin` paths.
+Clang also uses the GNU assembler so discovery and final assembly agree.
+Rebuilding uses the captured bytes, including generated headers/tables already
+present at capture time. Binary contents need not be UTF-8. Relative paths and
+configured include directories keep resources relocatable; a final build rejects
+dependencies that escape the frozen tree. Missing generated inputs must be created
+before capture; snapshots do not run or bundle an external build system/toolchain.
 
 Compiler processes run asynchronously. A pair is installed only after both builds
 and both loads succeed. Failure or cancellation preserves the previous pair.
 Temporary comparison artifacts are retained while their pair is loaded and
-removed when replaced or closed. Saving/exporting the complete pair is not yet
-a project-file workflow.
+removed when replaced or closed. **Save comparison** writes both sessions, frozen
+sources, settings, observations and paired checkpoints to `.rv32comparison`.
+**Export comparison report** writes readable JSON evidence without changing the
+machines. Project persistence saves the main workspace separately.
 
 The C machine and debugger remain unchanged by this presentation layer. The Qt
 comparison owns two Session objects, and no registers or RAM arrays are shared.

@@ -9,6 +9,12 @@ Shift+F5. F1 opens searchable offline help.
 See [the complete manual](../HOW_TO_USE.md), [the workspace reference](STUDIO.md)
 and [the flowcharts](FLOWCHARTS.md) for procedures and worked examples.
 
+## Terminal edition
+
+The independent terminal simulator has its own commands and build instructions:
+[riscv32-simulator](https://github.com/IcaroRamosDM/riscv32-simulator).
+This guide describes the machine shared with the desktop application.
+
 ## Essential terms
 
 | Term | Meaning |

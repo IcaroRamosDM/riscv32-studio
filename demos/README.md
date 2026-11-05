@@ -23,6 +23,17 @@ run. Standalone Assembly supplies its own entry point and any required startup.
 The .words files are small encoded programs that can be opened through
 File > Load ELF / binary / words. They are not Assembly source files.
 
+`instruction_sync.asm` replaces an instruction in RAM, executes `fence.i`, then
+runs the modified instruction. Select `rv32i_zifencei` or start the **Modify and
+execute code** project template. Step over the store to see the word change;
+Back/Replay restores code and execution. The expected exit status is 42.
+
+binary/hello_world.bin is a ready-to-load 120-byte RV32I program. Choose
+Examples > hello_world.bin to inspect its Reconstructed C without compiling.
+It writes "Hello World!" and a zero byte at RAM 0x00002000, then exits with status
+0. The bytes appear in Memory, not a host console. It contains no source or debug
+metadata; the inferred text comes from its instructions.
+
 [The complete user manual](../HOW_TO_USE.md) contains full source listings,
 exact procedures, expected outcomes and explanations for the guided lessons.
 [How RISC-V works](../HOW_RISCV_WORKS.md) explains instruction encoding,

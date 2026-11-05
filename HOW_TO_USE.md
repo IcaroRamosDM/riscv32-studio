@@ -1,7 +1,23 @@
-# RISC-V Studio 1.0.0 — User manual
+# RISC-V Studio — User manual
 
-Follow the examples in order if C, Assembly or processor execution is new to you.
-The interface uses English labels; the names below match those labels.
+The advanced C17/Assembly workspace opens by default. Start with
+**Learn by doing** above the editor, or **Help > Tutorials and examples**.
+Use [the practical guide](docs/ADVANCED_GUIDE.md), also available
+[in Brazilian Portuguese](docs/GUIA_PRATICO.md), for the current build/run
+shortcuts, interactive Terminal, examples and layout recovery.
+In the default workspace, **View > Panels > History** opens recent records;
+**Older**, **Newer** and **Latest** browse that list. **F7/F8** restore the
+machine's recorded states. The current position appears above the history table.
+
+The chapters below describe the **classic teaching workspace**, opened with
+`--classic` or automatically for older `.rv32project` files. The newer default
+workspace uses `.rvstudio` projects.
+
+The [C17 library reference](docs/C_STANDARD_LIBRARY.md) and
+[Terminal/panel reference](docs/TERMINAL_AND_WORKSPACE.md) document their own
+profile limits. Both interfaces offer English and Brazilian Portuguese labels.
+For advanced ISA choices, read [model behavior and controls](docs/ISA_MODEL_LIMITS.md).
+The configuration dialog explains the relevant controls for the selected profile.
 
 ## Contents
 
@@ -23,95 +39,49 @@ The interface uses English labels; the names below match those labels.
 
 ## 1. Install and open
 
-### Windows installer
+### Linux 1.9.0-rc1
 
-1. Run **RISC-V-Studio-1.0.0-Windows-Setup.exe**.
-2. Read the license. Continue if you accept its terms.
-3. Keep the suggested per-user installation folder or select another writable
-   folder. Choose whether to add desktop/project shortcuts.
-4. Complete installation.
-5. Search **RISC-V Studio** in Start and open it.
-6. Open **About** and verify **Version 1.0.0**.
+Download the DEB or portable archive from the
+[1.9.0-rc1 prerelease](https://github.com/IcaroRamosDM/riscv32-studio/releases/tag/v1.9.0-rc1).
+This package targets **Ubuntu 26.04 x86-64 with glibc 2.43 or newer** and a
+working graphical desktop. Qt, Python, RISC-V compilers and GDB are bundled.
+Debian 12/13 and Ubuntu 24.04 do not meet this package's glibc requirement.
 
-The installer includes the compiler, Python and Qt. Administrator permission is
-not required for the default per-user installation. Uninstall through Windows
-**Settings > Apps > Installed apps > RISC-V Studio > Uninstall**.
+For the DEB, use Ubuntu's package installer or run in the download directory:
 
-### Windows portable ZIP
+```sh
+sudo apt install ./RISC-V-Studio-1.9.0-rc1-Linux-amd64.deb
+```
 
-1. Right-click **RISC-V-Studio-1.0.0-Windows-Portable.zip** and select
-   **Extract All**.
-2. Open the extracted **RISC-V Studio** folder.
-3. Double-click **RISC-V Studio.exe**.
-4. Keep its DLLs and the python, toolchain, tools and runtime folders together.
-   Copying only that inner executable does not produce the single-file edition.
+Open **RISC-V Studio** from application search, or run
+`/opt/riscv32-studio/RISC-V-Studio`. Verify **1.9.0-rc1** in **About**.
+To remove the installed package, use `sudo apt remove riscv32-studio`.
+Keep personal source files and projects outside the application folder.
 
-### Windows single executable
+For the portable archive, extract the entire folder and execute
+`./RISC-V-Studio` inside it. Do not copy only the inner binary. Run
+`./install-desktop.sh` once to create an application shortcut; run it again
+if you move the folder. `./uninstall-desktop.sh` removes this registration
+and preserves the program and user projects.
 
-Double-click **RISC-V-Studio-1.0.0-Windows-Portable.exe**. The preparation window
-extracts a private temporary workspace, then opens Studio. This edition includes
-the same application, compiler and examples as the ZIP.
+Before installation, compare your package's `sha256sum` result with its entry
+in this release's **SHA256SUMS.txt**. From the extracted portable folder, check
+all files and permissions with:
 
-The outer file is compressed. While running, both the outer executable and the
-extracted files consume space. Its startup time depends partly on disk speed and
-operating-system scanning. Save lessons/projects in your Documents or another
-chosen folder. The launcher cleans unchanged files it created when the program
-exits; modified or newly created files are preserved, but a temporary folder is
-not a suitable permanent project location.
+```sh
+python/bin/python3 tools/verify_portable.py .
+```
 
-### Linux DEB
+Exporting a native host C executable requires
+a separate system C compiler and Make.
 
-On a supported Debian/Ubuntu x86-64 system, open a terminal in the download folder:
+### Windows and the previous stable release
 
-~~~bash
-sudo apt update
-sudo apt install ./riscv32-studio_1.0.0_amd64.deb
-~~~
-
-The package manager installs the runtime dependencies and RISC-V compiler.
-After installation, search **RISC-V Studio** in the applications menu. The
-registered launcher has the application icon. You can also run:
-
-~~~bash
-riscv32-studio-gui
-~~~
-
-Verify **About > Version 1.0.0**. To remove the package:
-
-~~~bash
-sudo apt remove riscv32-studio
-~~~
-
-Documents saved in your own folders remain separate from the application.
-
-### Linux archive and menu entry
-
-Extract **riscv32-studio-1.0.0-linux-x86_64.tar.gz**. Its README lists the system
-dependencies; the archive does not bundle a Linux compiler or the system's Qt.
-Open a terminal inside the extracted **riscv32-studio** directory:
-
-~~~bash
-./install-dependencies.sh
-./RISC-V-Studio
-~~~
-
-The first script displays and installs the required packages with the system
-package manager. The launcher opens the application. In a file manager that
-supports executable launchers, double-click **RISC-V-Studio** and choose **Run**
-if the file manager asks how to handle the executable script.
-
-To add this archive to the application menu for your user:
-
-~~~bash
-./install-desktop.sh
-~~~
-
-Keep the extracted folder in that location after registering it. Search for
-**RISC-V Studio**. If you move it, run install-desktop.sh from the new location.
-The paired **uninstall-desktop.sh** removes that per-user desktop registration.
-
-See [Distribution](docs/DISTRIBUTION.md) for system requirements. A normal Linux desktop needs
-its graphical session; WSL needs WSLg or another available display server.
+The [1.0.0 release](https://github.com/IcaroRamosDM/riscv32-studio/releases/tag/v1.0.0)
+retains its Windows installer, portable ZIP, single portable EXE and original
+Linux downloads.
+Use the original [1.0.0 installation guide](https://github.com/IcaroRamosDM/riscv32-studio/blob/v1.0.0/HOW_TO_USE.md#1-install-and-open)
+for those packages and their version-specific requirements.
 
 ## 2. Understand the workspace
 
@@ -122,7 +92,7 @@ its graphical session; WSL needs WSLg or another available display server.
 | Registers | x0-x31, their current values and changes in the latest update. |
 | Memory | A 256-byte window into the simulated RAM. |
 | Instruction | Decoded fields and meaning of the selected instruction; previous execution effects separately. |
-| Build / output | Clickable build errors and compiler output. |
+| Build log | Clickable build errors and compiler output. |
 | Symbols | Named function/data addresses from the executable. |
 | Variables / stack | Available C variables, arguments and call frames while paused. |
 | Breakpoints | Enabled address/source stopping points. |
@@ -230,28 +200,27 @@ uint32_t calls;
 
 static uint32_t sum(const uint32_t *items, uint32_t count)
 {
-  uint32_t total = 0;
-  for (uint32_t i = 0; i < count; ++i)
-  {
-    if (items[i] > 2)
-      total += items[i];
-  }
-  ++calls;
-  return total;
+    uint32_t total = 0;
+    for (uint32_t i = 0; i < count; ++i) {
+        if (items[i] > 2)
+            total += items[i];
+    }
+    ++calls;
+    return total;
 }
 
 int main(void)
 {
-  uint32_t local[3] = {10, 20, 30};
-  result = sum(values, 5) + sum(local, 3);
-  return result == 72 && calls == 2 ? 0 : 1;
+    uint32_t local[3] = {10, 20, 30};
+    result = sum(values, 5) + sum(local, 3);
+    return result == 72 && calls == 2 ? 0 : 1;
 }
 ~~~
 
 ### Build and follow it
 
 1. Select **RAM 64KiB**, **Stack 4KiB** and **Learning (-O0)**.
-2. Click **Build**. Wait for success in **Build / output**.
+2. Click **Build**. Wait for success in **Build log**.
 3. Click **Load build**. The machine is paused at startup, normally 0x1000.
 4. Press **F6** a few times. Inspect PC and sp in Registers.
 5. Press **Into C** (F11) to reach a mapped C location.
@@ -282,11 +251,15 @@ globals and Memory to verify their bytes.
 #include <stdint.h>
 volatile int32_t input = -3;
 volatile uint32_t signed_less, unsigned_less, result;
+
 int main(void)
 {
     signed_less = input < 2;
     unsigned_less = (uint32_t)input < UINT32_C(2);
-    if (input < 0) result = 100; else result = 200;
+    if (input < 0)
+        result = 100;
+    else
+        result = 200;
     return signed_less == 1 && unsigned_less == 0 && result == 100 ? 0 : 1;
 }
 ~~~
@@ -299,10 +272,12 @@ input is -3: signed_less=1, unsigned_less=0, result=100. The same input bits are
 #include <stdint.h>
 volatile uint32_t limit = 10;
 volatile uint32_t result;
+
 int main(void)
 {
     uint32_t total = 0;
-    for (uint32_t i = 1; i <= limit; ++i) total += i;
+    for (uint32_t i = 1; i <= limit; ++i)
+        total += i;
     result = total;
     return result == 55 ? 0 : 1;
 }
@@ -315,11 +290,14 @@ result=55 (0x00000037). Set a source breakpoint on the accumulation line, then R
 ~~~c
 #include <stdint.h>
 volatile uint32_t input = 5, result;
+
 static uint32_t factorial(uint32_t n)
 {
-    if (n < 2) return 1;
+    if (n < 2)
+        return 1;
     return n * factorial(n - 1);
 }
+
 int main(void)
 {
     result = factorial(input);
@@ -335,6 +313,7 @@ result=120 (0x00000078). At -O0, pause inside factorial and inspect Variables / 
 #include <stdint.h>
 uint32_t values[5] = {3, 6, 9, 12, 15};
 volatile uint32_t result;
+
 int main(void)
 {
     uint32_t total = 0;
@@ -355,6 +334,7 @@ values becomes {4,7,10,13,16}; result=50. Locate values in Symbols. Its 20 bytes
 #include <stdint.h>
 uint32_t values[3] = {10, 20, 30};
 volatile uint32_t result;
+
 int main(void)
 {
     uint32_t *p = &values[1];
@@ -373,18 +353,21 @@ values[1]=298, hexadecimal 0x0000012A, with bytes 2A 01 00 00. The word store fi
 ~~~c
 #include <stdint.h>
 volatile uint32_t lowest_sp = UINT32_MAX, entry_sp, result;
+
 static __attribute__((noinline)) uint32_t descend(uint32_t depth)
 {
     volatile uint32_t local[4] = {depth, 2, 3, 4};
     uint32_t sp;
-    __asm__ volatile ("mv %0, sp" : "=r"(sp));
-    if (sp < lowest_sp) lowest_sp = sp;
+    __asm__ volatile("mv %0, sp" : "=r"(sp));
+    if (sp < lowest_sp)
+        lowest_sp = sp;
     uint32_t child = depth ? descend(depth - 1) : 0;
     return local[0] + child;
 }
+
 int main(void)
 {
-    __asm__ volatile ("mv %0, sp" : "=r"(entry_sp));
+    __asm__ volatile("mv %0, sp" : "=r"(entry_sp));
     result = descend(4);
     return result == 10 && lowest_sp < entry_sp ? 0 : 1;
 }
@@ -406,12 +389,14 @@ volatile uint64_t wide_result;
 
 int main(void)
 {
-  product = left * right;
-  quotient = left / right;
-  remainder = left % right;
-  wide_result = wide_input / 17;
-  return product == -456765 && quotient == -333 && remainder == -24
-    && wide_result == UINT64_C(287454020) ? 0 : 1;
+    product = left * right;
+    quotient = left / right;
+    remainder = left % right;
+    wide_result = wide_input / 17;
+    return product == -456765 && quotient == -333 && remainder == -24 &&
+            wide_result == UINT64_C(287454020)
+        ? 0
+        : 1;
 }
 ~~~
 
@@ -423,6 +408,7 @@ product=-456765, quotient=-333, remainder=-24, wide_result=287454020. The exampl
 #include <stdint.h>
 volatile uint32_t values[4096];
 volatile uint32_t result;
+
 int main(void)
 {
     uint32_t total = 0;
@@ -500,17 +486,17 @@ volatile uint32_t result;
 
 __attribute__((noinline)) static uint32_t calculate(uint32_t value)
 {
-  uint32_t scaled = value * 8u;
-  uint32_t unused = value + 123u;
-  (void)unused;
-  uint32_t adjusted = scaled + 0u;
-  return adjusted + 3u;
+    uint32_t scaled = value * 8u;
+    uint32_t unused = value + 123u;
+    (void)unused;
+    uint32_t adjusted = scaled + 0u;
+    return adjusted + 3u;
 }
 
 int main(void)
 {
-  result = calculate(input);
-  return result == 59u ? 0 : 1;
+    result = calculate(input);
+    return result == 59u ? 0 : 1;
 }
 ~~~
 
@@ -547,17 +533,17 @@ Open **Examples > ram_boundary.asm**:
 ~~~asm
 # 64KiB: sw traps because 0x10000 is outside RAM.
 # 128KiB: Memory at 0x10000 contains 2A 00 00 00; exit code is 0.
-.option norvc
+    .option norvc
 .text
 .globl _start
 _start:
-  lui t0, 0x10
-  addi t1, zero, 42
-  sw t1, 0(t0)
-  lw a0, 0(t0)
-  addi a0, a0, -42
-  addi a7, zero, 93
-  ecall
+    lui t0, 0x10
+    addi t1, zero, 42
+    sw t1, 0(t0)
+    lw a0, 0(t0)
+    addi a0, a0, -42
+    addi a7, zero, 93
+    ecall
 ~~~
 
 1. Select **RAM=64KiB**, then Build and Load build.
@@ -579,7 +565,7 @@ sp yourself if your program uses the stack. Stack and C optimization settings
 are disabled in this mode.
 
 To deliberately inspect an error, remove the colon from _start:, then Build.
-Open Build / output and click the diagnostic. Restore the colon and rebuild.
+Open Build log and click the diagnostic. Restore the colon and rebuild.
 Full compiler output is available separately from the summarized diagnostic.
 
 ## 11. Import, export and projects
@@ -653,17 +639,48 @@ compiler, missing files, external build systems or independent Compare sessions.
 5. In **Calls**, double-click a function to navigate to its control flow.
 6. In **References**, filter by name, address or kind; double-click a source
    instruction or target to navigate.
-7. In **Pseudocode (experimental)**, enable the checkbox if you want a low-level
-   C-like explanation of register operations.
+7. In **Reconstructed C**, inspect the inferred C function. It is shown by default.
+   The advanced checkbox switches to the individual-instruction translation.
 
 Drag graphs to pan; Ctrl+wheel zooms. Fit graph returns the view to the graph.
 Green arrows represent taken conditional branches; gray arrows represent
 continuations. These are static possibilities, not a trace of the current run.
 
 The analyzer reads the initial executable, even after RAM changes during execution.
-Unknown indirect targets remain unresolved. Pseudocode cannot restore the original
-C, names, comments or structure. Large analyses can reach a displayed bound and
-report partial results. See [Analysis](docs/ANALYSIS.md) for exact bounds.
+Unknown indirect targets remain unresolved. Generated C can recover common
+control structures but cannot recover original names, comments or declarations.
+Large analyses can reach a displayed bound and report partial results.
+
+### 12.1 Reconstruct and step through a raw binary
+
+1. Choose **Examples > hello_world.bin**. This loads the bundled 120-byte RV32I
+   program paused, at **0x00001000**, with **64KiB** RAM.
+2. Observe the new **Reconstructed C** tab in the Source panel. It shows
+   `const char text_1[] = "Hello World!"`, an equivalent loop that writes each
+   character to **0x00002000**, and an exit status of zero.
+3. Enter **0x00002000** in Memory and click **Go**.
+4. Press **F6** repeatedly. Assembly advances every instruction; the reconstructed
+   C highlight can stay on one statement for multiple steps. The message appears
+   byte by byte in the Memory ASCII column.
+5. Use **Back** and **Replay** to inspect earlier/later recorded steps.
+6. Choose a different **Function** when a program has several functions. Click
+   **PC** to return to execution following.
+7. Click a mapped line's gutter, or F9 while this view has focus, to toggle a
+   breakpoint at its first associated instruction. Some declarations have no
+   associated instruction.
+8. Click **Save C...** to save the selected reconstructed function. This does not
+   change the editable program or load/run a new executable.
+
+For your own `.bin`, use **File > Load ELF / binary / words...** and supply its
+load address and entry PC. Standalone Assembly is reconstructed after Build and
+Load build. An ELF with debug mappings can still show available original sources;
+select Reconstructed C explicitly to compare the inferred representation.
+
+The generated function needs a startup/`main` and environment before recompiling.
+Its memory addresses refer to simulated RAM. Do not interpret those addresses as
+ordinary host pointers. Explicit `rv32_*` operations require manual completion;
+calls, indirect targets and unusual control flow are not fully decompiled.
+See [Analysis](docs/ANALYSIS.md) for the algorithm, example and exact bounds.
 
 ## 13. Controls and shortcuts
 
@@ -712,7 +729,7 @@ execution between instructions; Cancel build stops compilation.
 | Raw binary shows unexpected instructions | Verify architecture, entry/load addresses and byte order; raw files have no metadata. |
 | Assembly faults on a load/store | Check the effective address, required alignment and whether every accessed byte fits RAM. |
 | Source will not open | Use a regular UTF-8 text file without NUL bytes, up to 4 MiB. |
-| Windows reports an operating-system security block | Check the Windows error message and your system's installation policy. |
+| Windows reports an operating-system security block | Record the Windows error message and check the installation instructions for your package. |
 | An optimization result differs unexpectedly | Check defined C behavior and inputs; compare actual instructions and observable data. |
 
 Building an unsaved editor is supported. Closing/opening another source prompts

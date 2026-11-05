@@ -9,10 +9,12 @@ volatile uint64_t wide_result;
 
 int main(void)
 {
-  product = left * right;
-  quotient = left / right;
-  remainder = left % right;
-  wide_result = wide_input / 17;
-  return product == -456765 && quotient == -333 && remainder == -24
-    && wide_result == UINT64_C(287454020) ? 0 : 1;
+    product = left * right;
+    quotient = left / right;
+    remainder = left % right;
+    wide_result = wide_input / 17;
+    return product == -456765 && quotient == -333 && remainder == -24 &&
+            wide_result == UINT64_C(287454020)
+        ? 0
+        : 1;
 }

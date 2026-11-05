@@ -217,7 +217,7 @@ using ra. A large li can expand into more than one real instruction.
 This hand-written sequence deliberately chooses registers and addresses:
 
 ~~~asm
-.option norvc
+    .option norvc
 .text
 .globl _start
 _start:
