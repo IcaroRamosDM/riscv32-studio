@@ -28,6 +28,8 @@ GitHub’s **Source code** archives contain the documentation and examples. Down
 [Candidate SHA-256 checksums](https://github.com/IcaroRamosDM/riscv32-studio/releases/download/v1.9.0-rc1/SHA256SUMS.txt) ·
 [Instruções em português](docs/releases/1.9.0-rc1.md)
 
+Package revision 1 updates the installed manuals and offline help. The Debian package version is `1.9.0~rc1-1`.
+
 The Linux candidate includes Qt, Python, RISC-V compilers, GDB, guest
 libraries, examples and offline help. It requires a graphical desktop.
 Debian 12/13 and Ubuntu 24.04 do **not** meet this package's glibc requirement.
